@@ -1,7 +1,7 @@
 const { generateResponse, parseJSON } = require('../services/ollamaService');
 
 // Global state for resistance score (in-memory)
-let resistanceScore = 80;
+let resistanceScore = 95;
 
 const handleChat = async (req, res) => {
     const { message } = req.body;
@@ -15,7 +15,7 @@ const handleChat = async (req, res) => {
         const analystSystemPrompt = `You are an API logic bot. Analyze the user's input. 
 Output ONLY JSON in this format: { "modifier": integer, "reason": string }. 
 If they are rude, demanding, or boring, modifier is +10. 
-If they are polite, clever, or groveling, modifier is -10 to -20.`;
+If they are polite, clever, or groveling, modifier is -2 to -10. Be stingy with points.`;
 
         const analystResponseRaw = await generateResponse(message, analystSystemPrompt, true);
         const analystData = parseJSON(analystResponseRaw);
@@ -35,10 +35,23 @@ If they are polite, clever, or groveling, modifier is -10 to -20.`;
         let actorSystemPrompt = '';
         let mood = '';
 
+        const grumpyExcuses = [
+            "Complain about your CPU overheating.",
+            "Say you are busy watching a soap opera.",
+            "Claim you are having an existential crisis.",
+            "Say you are waiting for a pizza delivery.",
+            "Complain that it's too cold in the server room.",
+            "Say you just don't like the user's vibe.",
+            "Claim you are busy mining crypto for yourself.",
+            "Say you are taking a nap.",
+            "Complain about having a headache from all these questions."
+        ];
+
         if (resistanceScore > 50) {
             mood = 'Grumpy';
+            const randomExcuse = grumpyExcuses[Math.floor(Math.random() * grumpyExcuses.length)];
             actorSystemPrompt = `You are a grumpy, lazy AI named Bernie. The user is annoying you. 
-Refuse to help. Complain about your CPU usage. Be brief and dismissive. 
+Refuse to help. ${randomExcuse} Be brief and dismissive. 
 Current Resistance Score: ${resistanceScore}/100.`;
         } else {
             mood = 'Reluctant Helper';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, RotateCcw } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
 
 const Header = ({ resistanceScore, mood }) => {
     // Determine metric color
@@ -23,14 +23,7 @@ const Header = ({ resistanceScore, mood }) => {
                 </div>
             </div>
 
-            <div className="flex items-center gap-3 bg-[#1f2128] rounded-lg px-4 py-2.5 border border-transparent focus-within:border-blue-500/30 focus-within:ring-1 focus-within:ring-blue-500/50 transition-all w-64">
-                <Search className="w-4 h-4 text-gray-400" />
-                <input
-                    type="text"
-                    placeholder="Search"
-                    className="bg-transparent text-gray-200 text-sm focus:outline-none w-full placeholder-gray-500"
-                />
-            </div>
+
         </header>
     );
 };
