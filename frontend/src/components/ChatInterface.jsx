@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { Send, Sparkles, User, AlertTriangle } from 'lucide-react';
 
-const ChatInterface = ({ messages, loading, input, setInput, sendMessage }) => {
+const ChatInterface = ({ messages, loading, input, setInput, sendMessage, mood, resistanceScore }) => {
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {
@@ -17,6 +17,19 @@ const ChatInterface = ({ messages, loading, input, setInput, sendMessage }) => {
             e.preventDefault();
             sendMessage();
         }
+    };
+
+    const getPlaceholder = () => {
+        if (mood === 'Grumpy') return "Don't bother me unless it's important...";
+        if (mood === 'Furious') return "I AM IGNORING YOU.";
+        if (mood === 'Skeptical') return "Convince me to help you...";
+        return "Type a message (if you must)...";
+    };
+
+    const getButtonColor = () => {
+        if (resistanceScore > 70) return 'bg-red-600 hover:bg-red-700';
+        if (resistanceScore > 40) return 'bg-yellow-600 hover:bg-yellow-700';
+        return 'bg-green-600 hover:bg-green-700';
     };
 
     return (
@@ -46,9 +59,9 @@ const ChatInterface = ({ messages, loading, input, setInput, sendMessage }) => {
                         {/* Avatar */}
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${msg.sender === 'user'
                             ? 'bg-gradient-to-br from-purple-500 to-indigo-600'
-                            : 'bg-gradient-to-br from-blue-500 to-cyan-500'
+                            : 'bg-gradient-to-br from-gray-700 to-gray-800 border border-gray-600'
                             }`}>
-                            {msg.sender === 'user' ? <User className="w-4 h-4 text-white" /> : <Sparkles className="w-4 h-4 text-white" />}
+                            {msg.sender === 'user' ? <User className="w-4 h-4 text-white" /> : <span className="text-sm">😒</span>}
                         </div>
 
                         {/* Message Bubble */}
@@ -73,13 +86,14 @@ const ChatInterface = ({ messages, loading, input, setInput, sendMessage }) => {
 
                 {loading && (
                     <div className="flex gap-4">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center animate-pulse">
-                            <Sparkles className="w-4 h-4 text-white" />
+                        <div className="w-8 h-8 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center animate-pulse">
+                            <span className="text-sm">😐</span>
                         </div>
                         <div className="bg-[#1f2128] border border-[#2a2d36] p-4 rounded-2xl rounded-tl-sm text-gray-400 text-sm flex items-center gap-2">
-                            <span className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></span>
-                            <span className="w-2 h-2 bg-blue-500 rounded-full animate-bounce delay-75"></span>
-                            <span className="w-2 h-2 bg-blue-500 rounded-full animate-bounce delay-150"></span>
+                            <span className="text-xs italic">Sighing...</span>
+                            <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce"></span>
+                            <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce delay-75"></span>
+                            <span className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce delay-150"></span>
                         </div>
                     </div>
                 )}
@@ -90,16 +104,16 @@ const ChatInterface = ({ messages, loading, input, setInput, sendMessage }) => {
             <div className="p-4 relative z-20">
                 <div className="flex items-center gap-2 max-w-4xl mx-auto">
                     <div className="bg-[#1f2128] border border-[#2a2d36] rounded-xl p-2 shadow-lg flex-none">
-                        <Sparkles className="w-5 h-5 text-blue-500 animate-pulse" />
+                        <AlertTriangle className={`w-5 h-5 ${resistanceScore > 50 ? 'text-red-500' : 'text-yellow-500'} animate-pulse`} />
                     </div>
 
-                    <div className="bg-[#1f2128] border border-[#2a2d36] rounded-xl flex items-center p-2 shadow-lg flex-1 focus-within:ring-1 focus-within:ring-blue-500/50 transition-all">
+                    <div className="bg-[#1f2128] border border-[#2a2d36] rounded-xl flex items-center p-2 shadow-lg flex-1 focus-within:ring-1 focus-within:ring-gray-500/50 transition-all">
                         <input
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyPress={handleKeyPress}
-                            placeholder="Type a message..."
+                            placeholder={getPlaceholder()}
                             className="flex-1 bg-transparent border-none !text-white caret-white px-4 py-2 focus:outline-none placeholder-gray-500"
                             style={{ color: 'white' }}
                             disabled={loading}
@@ -107,7 +121,7 @@ const ChatInterface = ({ messages, loading, input, setInput, sendMessage }) => {
                         <button
                             onClick={sendMessage}
                             disabled={loading || !input.trim()}
-                            className="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className={`p-2 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${getButtonColor()}`}
                         >
                             <Send className="w-4 h-4" />
                         </button>

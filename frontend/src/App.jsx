@@ -63,6 +63,8 @@ function App() {
             input={input}
             setInput={setInput}
             sendMessage={sendMessage}
+            mood={mood}
+            resistanceScore={resistanceScore}
           />
         </main>
       </div>

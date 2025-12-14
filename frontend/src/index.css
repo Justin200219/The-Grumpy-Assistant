@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 /* Custom Scrollbar */
-/* Custom Scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
 }
@@ -34,4 +33,21 @@ body,
   background-color: #13151b;
   /* New Dark Background */
   color: #e5e7eb;
+}
+
+/* Custom Animations */
+@keyframes pulse-slow {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
