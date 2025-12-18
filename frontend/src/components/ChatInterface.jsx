@@ -1,4 +1,6 @@
 import React, { useRef, useEffect } from 'react';
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 import { Send, Sparkles, User, AlertTriangle } from 'lucide-react';
 
 const ChatInterface = ({ messages, loading, input, setInput, sendMessage, mood, resistanceScore }) => {
@@ -78,7 +80,10 @@ const ChatInterface = ({ messages, loading, input, setInput, sendMessage, mood, 
                                 ? 'bg-[#2b2d33] text-gray-100 rounded-tr-sm'
                                 : 'bg-[#1f2128] text-gray-300 rounded-tl-sm shadow-sm border border-[#2a2d36]'
                                 }`}>
-                                {msg.text}
+                                <div
+                                    className="prose prose-invert prose-sm max-w-none break-words [&>p]:mb-0 [&>p]:last:mb-0"
+                                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(marked.parse(msg.text || '', { breaks: true })) }}
+                                />
                             </div>
                         </div>
                     </div>
